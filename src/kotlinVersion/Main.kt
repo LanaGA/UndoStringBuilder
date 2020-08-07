@@ -12,7 +12,7 @@ fun main() {
         println(reduce(Operation.Undo()))
         println(reduce(Operation.Duplicate(0)))
         println(reduce(Operation.Undo()))
-
+        println(reduce(Operation.Undo()))
 
     }
 }

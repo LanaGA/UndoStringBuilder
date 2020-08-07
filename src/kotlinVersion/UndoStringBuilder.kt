@@ -12,16 +12,25 @@ class UndoStringBuilder {
     fun reduce(operation: Operation): String {
         return when (operation) {
             is Delete -> {
-                calls.add(operation.copy(string = str.toString()))
-                str.deleteCharAt(operation.index).toString()
+                try {
+                    calls.add(operation.copy(string = str.toString()))
+                    str.deleteCharAt(operation.index).toString()
+                } catch (e: Exception) {
+                    return "There are no character to delete!"
+                }
             }
             is Undo -> {
-                str.replace(0, str.length, calls.peek().string)
-                calls.pop().string
-                str.toString()
+                try {
+                    str.replace(0, str.length, calls.peek().string)
+                    calls.pop().string
+                    str.toString()
+                } catch (e: EmptyStackException) {
+                    return "There are no operations to undo!"
+                }
+
             }
             is Create -> {
-                calls.add(operation)
+                calls.add(operation.copy(string = str.toString()))
                 str.append(operation.string)
                 return operation.string
             }
@@ -30,8 +39,13 @@ class UndoStringBuilder {
                 str.insert(operation.index, operation.string).toString()
             }
             is Duplicate -> {
-                calls.add(operation.copy(string = str.toString()))
-                str.insert(operation.index, str[operation.index]).toString()
+                try {
+
+                    calls.add(operation.copy(string = str.toString()))
+                    str.insert(operation.index, str[operation.index]).toString()
+                } catch (e: Exception) {
+                    return "There are no character to duplicate!"
+                }
             }
         }
     }
